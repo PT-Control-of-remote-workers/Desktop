@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="paneMain" onMouseDragged="#paneSignUpDragged" onMousePressed="#paneSignUpPressed" prefHeight="517.0" prefWidth="820.0" stylesheets="@../css/mainStyle.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cow.desktop.controller.MainController">
+   <AnchorPane id="settingsPane" fx:id="settingsPane" layoutX="29.0" layoutY="180.0" prefHeight="311.0" prefWidth="765.0" stylesheets="@../css/mainStyle.css" visible="false">
+      <children>
+         <CheckBox layoutX="50.0" layoutY="44.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="24.0" />
+         <Label layoutX="99.0" layoutY="30.0" prefHeight="50.0" prefWidth="398.0" text="Access webcam" textFill="WHITE">
+            <font>
+               <Font size="37.0" />
+            </font>
+         </Label>
+         <Button id="btnSelectTeam" fx:id="btnSaveSettings" layoutX="317.0" layoutY="245.0" mnemonicParsing="false" onAction="#btnSaveSettingsClicked" prefHeight="35.0" prefWidth="130.0" stylesheets="@../css/mainStyle.css" text="Save" textFill="WHITE">
+            <font>
+               <Font size="23.0" />
+            </font>
+         </Button>
+      </children></AnchorPane>
+   <VBox fx:id="mainVbox" prefHeight="517.0" prefWidth="820.0">
+      <AnchorPane prefHeight="154.0" prefWidth="820.0" />
+      <AnchorPane fx:id="mainMiddlePane" minHeight="-Infinity" prefHeight="118.0" prefWidth="820.0">
+         <Button id="btnStart" fx:id="btnStart" layoutX="82.0" layoutY="11.0" mnemonicParsing="false" onAction="#btnStartHandler" prefHeight="79.0" prefWidth="210.0" stylesheets="@../css/mainStyle.css" text="Start" textAlignment="CENTER" textFill="#33ff00">
+            <font>
+               <Font size="38.0" />
+            </font>
+         </Button>
+         <Button id="btnPause" fx:id="btnPause" layoutX="305.0" layoutY="11.0" mnemonicParsing="false" onAction="#btnPauseHandler" prefHeight="79.0" prefWidth="210.0" stylesheets="@../css/mainStyle.css" text="Pause" textAlignment="CENTER" textFill="#dbff00">
+            <font>
+               <Font size="38.0" />
+            </font>
+         </Button>
+         <Button id="btnStop" fx:id="btnStop" layoutX="528.0" layoutY="11.0" mnemonicParsing="false" onAction="#btnStopHandler" prefHeight="79.0" prefWidth="210.0" stylesheets="@../css/mainStyle.css" text="Stop" textAlignment="CENTER" textFill="#ff0505">
+            <font>
+               <Font size="38.0" />
+            </font>
+         </Button>
+      </AnchorPane>
+      <AnchorPane fx:id="mainBottomPane" minHeight="-Infinity" prefHeight="109.0" prefWidth="820.0">
+         <Button id="btnSelectTeam" fx:id="btnSelectTeam" layoutX="96.0" layoutY="26.0" mnemonicParsing="false" onAction="#btnSelectTeamClicked" prefHeight="41.0" prefWidth="174.0" stylesheets="@../css/mainStyle.css" text="Select team" textAlignment="CENTER" textFill="WHITE">
+            <font>
+               <Font size="25.0" />
+            </font>
+         </Button>
+         <Button id="btnSelectTeam" fx:id="btnComplete" layoutX="326.0" layoutY="26.0" mnemonicParsing="false" onAction="#btnCompleteClicked" prefHeight="41.0" prefWidth="174.0" stylesheets="@../css/mainStyle.css" text="Complete" textAlignment="CENTER" textFill="WHITE">
+            <font>
+               <Font size="25.0" />
+            </font>
+         </Button>
+         <Button id="btnSelectTeam" fx:id="btnSelectTask" layoutX="550.0" layoutY="26.0" mnemonicParsing="false" onAction="#btnSelectTaskClicked" prefHeight="41.0" prefWidth="174.0" stylesheets="@../css/mainStyle.css" text="Select task" textAlignment="CENTER" textFill="WHITE">
+            <font>
+               <Font size="25.0" />
+            </font>
+         </Button>
+         <ListView id="mainListView" fx:id="mainListView" layoutX="47.0" layoutY="-134.0" prefHeight="275.0" prefWidth="726.0" stylesheets="@../css/mainStyle.css" visible="false" />
+         <Button id="btnOk" fx:id="selectButton" layoutX="317.0" layoutY="149.0" mnemonicParsing="false" onAction="#selectButtonClicked" prefHeight="55.0" prefWidth="174.0" stylesheets="@../css/mainStyle.css" text="OK" textAlignment="CENTER" textFill="#0d0d0d" visible="false">
+            <font>
+               <Font name="Arial" size="29.0" />
+            </font></Button>
+      </AnchorPane>
+   </VBox>
+   <AnchorPane prefHeight="142.0" prefWidth="820.0">
+      <Label id="lblSelectedTask" fx:id="lblSelectedTask" alignment="CENTER" layoutX="36.0" layoutY="15.0" prefHeight="50.0" prefWidth="292.0" stylesheets="@../css/mainStyle.css" textAlignment="CENTER">
+         <font>
+            <Font size="34.0" />
+         </font>
+      </Label>
+      <Label id="lblTimer" fx:id="lblTimer" alignment="CENTER" layoutX="5.0" layoutY="81.0" prefHeight="90.0" prefWidth="353.0" stylesheets="@../css/mainStyle.css" text="00:00:00" textFill="WHITE">
+         <font>
+            <Font size="62.0" />
+         </font>
+      </Label>
+      <Button id="btnClose" fx:id="btnClose" layoutX="782.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnCloseClicked" prefHeight="26.0" prefWidth="24.0" stylesheets="@../css/mainStyle.css" />
+      <Button id="btnRollUp" fx:id="btnRollUp" layoutX="748.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnRollUpClicked" prefHeight="26.0" prefWidth="24.0" stylesheets="@../css/mainStyle.css" />
+      <Label id="userData" alignment="CENTER" layoutX="359.0" layoutY="65.0" prefHeight="82.0" prefWidth="435.0" stylesheets="@../css/mainStyle.css" text="Denis Lisaev" textFill="WHITE">
+         <font>
+            <Font size="34.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="55.0" fitWidth="61.0" layoutX="699.0" layoutY="79.0" pickOnBounds="true" preserveRatio="true">
+         <Image url="@../img/avatar.png" />
+      </ImageView>
+      <Button id="btnSettings" fx:id="btnSettings" layoutX="410.0" layoutY="81.0" mnemonicParsing="false" onAction="#btnSettingsClicked" prefHeight="50.0" prefWidth="50.0" stylesheets="@../css/mainStyle.css" />
+   </AnchorPane>
+</AnchorPane>

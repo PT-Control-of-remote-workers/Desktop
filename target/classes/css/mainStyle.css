@@ -1,0 +1,198 @@
+#paneSignUp {
+    -fx-background-color: black;
+    -fx-background-radius: 15;
+}
+
+#paneMain {
+    -fx-background-color: black;
+    -fx-background-radius: 15;
+}
+
+#settingsPane {
+    -fx-background-color: black;
+    -fx-border-color: white;
+    -fx-border-width: 1;
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+}
+#lblSelectedTask{
+    -fx-background-color: D6D6D6;
+    -fx-background-radius: 50;
+}
+
+#loginTextField {
+    -fx-background-radius: 10;
+    -fx-background-image:url('/img/loginPict.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 1% 50%;
+    -fx-font-size: 18;
+}
+
+#passwordField {
+    -fx-background-radius: 15;
+    -fx-background-image:url('/img/passPict.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 1% 50%;
+    -fx-font-size: 18;
+}
+
+#btnStart{
+    -fx-background-color: transparent;
+    -fx-border-color: #33FF00;
+    -fx-border-width: 1;
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+}
+
+#btnStart: hover {
+    -fx-background-color: #021500;
+    -fx-border-color: #33FF00;
+    -fx-border-width: 2;
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+}
+
+#btnPause{
+    -fx-background-color: transparent;
+    -fx-border-color: #DBFF00;
+    -fx-border-width: 1;
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+}
+
+#btnPause: hover {
+    -fx-background-color: #152000;
+    -fx-border-color: #DBFF00;
+    -fx-border-width: 2;
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+}
+
+#btnStop{
+    -fx-background-color: transparent;
+    -fx-border-color: #FF0505;
+    -fx-border-width: 1;
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+}
+
+#btnStop: hover {
+    -fx-background-color: #200101;
+    -fx-border-color: #FF0505;
+    -fx-border-width: 2;
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+}
+
+#btnClose{
+    -fx-background-color: transparent;
+    -fx-background-image:url('/img/krest.png');
+    -fx-background-size: 90% 90%;
+    -fx-background-repeat: no-repeat
+}
+
+#btnClose: hover {
+    -fx-background-color: transparent;
+    -fx-background-image:url('/img/krest.png');
+    -fx-background-size: 100% 100%;
+    -fx-background-repeat: no-repeat
+}
+
+#btnRollUp{
+    -fx-background-color: transparent;
+    -fx-background-image:url('/img/rollup.png');
+    -fx-background-size: 90% 90%;
+    -fx-background-repeat: no-repeat
+}
+
+#btnRollUp: hover {
+    -fx-background-color: transparent;
+    -fx-background-image:url('/img/rollup.png');
+    -fx-background-size: 100% 100%;
+    -fx-background-repeat: no-repeat
+}
+
+#btnSelectTeam{
+    -fx-background-color: #181818;
+    -fx-border-color: white;
+    -fx-border-width: 1;
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+}
+
+#btnSelectTeam: hover {
+    -fx-background-color: #222222;
+    -fx-border-color: white;
+    -fx-border-width: 2;
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+}
+
+#buttonLogIn {
+    -fx-background-color: transparent;
+    -fx-border-color: #33ff00;
+    -fx-border-width: 1;
+    -fx-border-radius: 50;
+}
+
+#buttonLogIn: hover {
+    -fx-background-color: transparent;
+    -fx-border-color: #33ff50;
+    -fx-border-width: 2;
+    -fx-border-radius: 50;
+}
+
+
+#btnOk{
+    -fx-background-color: #D6D6D6;
+    -fx-border-color: #8C8C8C;
+    -fx-border-width: 1;
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+}
+
+#btnOk: hover {
+    -fx-background-color: #8C8C8C;
+    -fx-border-color: white;
+    -fx-border-width: 2;
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+}
+
+#btnSettings{
+    -fx-background-color:transparent;
+    -fx-background-image:url('/img/settings.png');
+    -fx-background-size: 90% 90%;
+    -fx-background-repeat: no-repeat
+}
+
+#btnSettings: hover{
+    -fx-background-color:transparent;
+    -fx-background-image:url('/img/settings.png');
+    -fx-background-size: 100% 100%;
+    -fx-background-repeat: no-repeat
+}
+
+#mainListView{
+    -fx-background-color: black;
+}
+
+.list-view .list-cell:even,
+ .list-view .list-cell:odd{
+    -fx-background-color: white;
+    -fx-alignment: center;
+    -fx-text-fill: black ;
+    -fx-border-color: black;
+    -fx-border-width: 5;
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+}
+
+.list-view .list-cell:selected:odd,
+.list-view .list-cell:selected:even {
+    -fx-border-color: blue;
+    -fx-border-width: 5;
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+}
+
