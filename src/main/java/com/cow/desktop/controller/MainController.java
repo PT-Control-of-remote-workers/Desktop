@@ -19,11 +19,17 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import okhttp3.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainController {
+    int workerid = 2;
+    
     public Button btnComplete;
     public Button btnSelectTeam;
     public Button btnSelectTask;
@@ -51,7 +57,18 @@ public class MainController {
     ArrayList<String> teams = new ArrayList<String>();
     String selectedTask;
     String getSelectedTeam;
+    int selectedTeamId = -1;
+    int selectedTaskId = -1;
     boolean isSelectingTask = false;
+    JSONArray jsonTeams = null;
+    JSONArray jsonTasks = null;
+
+    private static String URL = "http://localhost:8080";
+    private static String getTeamsByWorkerURL = URL + "/team/getByWorker";
+    private static String getTasksByWorkerAndTeamURL = URL + "/task/getByWorkerAndTeam";
+    private static String taskCompleteURL = URL + "/task/complete";
+    private static String callURL = "http://localhost:9080/call";
+    
 
 
     public void setPrimaryStage(Stage mainStage) {
@@ -76,37 +93,76 @@ public class MainController {
         }
     }
 
-    public void btnStartHandler(ActionEvent actionEvent) {
-        if (timeline == null) {
-            timeline = new Timeline(
-                    new KeyFrame(
-                            Duration.millis(100),
-                            ae -> {
-                                time[0]++;
-                                String hours = String.valueOf(time[0] / 36000);
-                                String minutes = String.valueOf((time[0] / 600)-(time[0] / 36000)*60);
-                                //String seconds = String.valueOf(time[0] % 6000);
-                                String seconds = String.valueOf(time[0] / 10 - (time[0] / 600)*60);
-                                if (hours.length() == 1)
-                                    hours = "0" + hours;
-                                if (minutes.length() == 1)
-                                    minutes = "0" + minutes;
-                                if (seconds.length() == 1)
-                                    seconds = "0" + seconds;
-
-                                lblTimer.setText(hours + ":" + minutes + ":" + seconds);
-                            }
-                    )
-            );
-
-            timeline.setCycleCount(Animation.INDEFINITE); //Animation.INDEFINITE - бесконечное повторение
+    public void sendCall(String status){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("process", "none");
+            jsonObject.put("taskId", selectedTaskId);
+            jsonObject.put("teamId", selectedTeamId);
+            jsonObject.put("type", status);
+            jsonObject.put("workerId", workerid);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        timeline.play();
+        try {
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(callURL)
+                    .post(body)
+                    .build();
+            Response responses = null;
+
+            try {
+                responses = client.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void btnStartHandler(ActionEvent actionEvent) {
+        if (selectedTaskId != -1) {
+            if (timeline == null) {
+                timeline = new Timeline(
+                        new KeyFrame(
+                                Duration.millis(100),
+                                ae -> {
+                                    time[0]++;
+                                    String hours = String.valueOf(time[0] / 36000);
+                                    String minutes = String.valueOf((time[0] / 600) - (time[0] / 36000) * 60);
+                                    //String seconds = String.valueOf(time[0] % 6000);
+                                    String seconds = String.valueOf(time[0] / 10 - (time[0] / 600) * 60);
+                                    if (hours.length() == 1)
+                                        hours = "0" + hours;
+                                    if (minutes.length() == 1)
+                                        minutes = "0" + minutes;
+                                    if (seconds.length() == 1)
+                                        seconds = "0" + seconds;
+
+                                    lblTimer.setText(hours + ":" + minutes + ":" + seconds);
+
+                                    if (time[0]%3000==0){
+                                        sendCall("WORKING");
+                                    }
+                                }
+                        )
+                );
+                timeline.setCycleCount(Animation.INDEFINITE); //Animation.INDEFINITE - бесконечное повторение
+            }
+            timeline.play();
+        }
     }
 
     public void btnPauseHandler(ActionEvent actionEvent) {
-        if (timeline != null)
+        if (timeline != null) {
+            sendCall("PAUSE");
             timeline.pause();
+        }
     }
 
     public void btnStopHandler(ActionEvent actionEvent) {
@@ -119,9 +175,39 @@ public class MainController {
     }
 
     public void btnCompleteClicked(ActionEvent actionEvent) {
-        lblSelectedTask.setText("");
-        selectedTask = "";
-        btnStopHandler(actionEvent);
+        if (selectedTaskId != -1) {
+
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("id", selectedTaskId);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(taskCompleteURL)
+                        .put(body)
+                        .build();
+                Response responses = null;
+
+                try {
+                    responses = client.newCall(request).execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            lblSelectedTask.setText("");
+            selectedTask = "";
+            btnStopHandler(actionEvent);
+        }
     }
 
     public void btnSelectTeamClicked(ActionEvent actionEvent) {
@@ -136,55 +222,107 @@ public class MainController {
         btnStop.setVisible(false);
 
         teams.clear();
-        mainListView.getItems().clear();
-        teams.add("Team1");
-        teams.add("Team2");
-        teams.add("Team3");
-        teams.add("Team4");
-        teams.add("Team5");
-        teams.add("Team6");
 
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("id", workerid);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(getTeamsByWorkerURL)
+                    .post(body)
+                    .build();
+            Response responses = null;
+
+            try {
+                responses = client.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String jsonData = responses.body().string();
+            jsonData = "{\"teams\":" + jsonData;
+            jsonData = jsonData + "}";
+            JSONObject Jobject = new JSONObject(jsonData);
+            jsonTeams = Jobject.getJSONArray("teams");
+
+            for (int i = 0; i < jsonTeams.length(); i++) {
+                JSONObject object = jsonTeams.getJSONObject(i);
+                teams.add(object.getString("name"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        mainListView.getItems().clear();
         ObservableList<String> langs = FXCollections.observableArrayList(teams);
         mainListView.setItems(langs);
     }
 
     public void btnSelectTaskClicked(ActionEvent actionEvent) {
-        isSelectingTask = true;
-        btnComplete.setVisible(false);
-        btnSelectTask.setVisible(false);
-        btnSelectTeam.setVisible(false);
-        btnStart.setVisible(false);
-        btnPause.setVisible(false);
-        btnStop.setVisible(false);
+        if (selectedTeamId != -1) {
+            isSelectingTask = true;
+            btnComplete.setVisible(false);
+            btnSelectTask.setVisible(false);
+            btnSelectTeam.setVisible(false);
+            btnStart.setVisible(false);
+            btnPause.setVisible(false);
+            btnStop.setVisible(false);
 
-        mainListView.setVisible(true);
-        selectButton.setVisible(true);
+            mainListView.setVisible(true);
+            selectButton.setVisible(true);
 
-        tasks.clear();
-        mainListView.getItems().clear();
-        tasks.add("Task1");
-        tasks.add("Task2");
-        tasks.add("Task3");
-        tasks.add("Task4");
-        tasks.add("Task5");
-        tasks.add("Task6");
-        tasks.add("Task7");
-        tasks.add("Task8");
-        tasks.add("Task9");
-        tasks.add("Task10");
-        tasks.add("Task11");
-        tasks.add("Task12");
-        tasks.add("Task13");
-        tasks.add("Task14");
-        tasks.add("Task15");
-        tasks.add("Task16");
-        tasks.add("Task17");
-        tasks.add("Task18");
-        tasks.add("Task19");
-        tasks.add("Task20");
+            tasks.clear();
+            mainListView.getItems().clear();
 
-        ObservableList<String> langs = FXCollections.observableArrayList(tasks);
-        mainListView.setItems(langs);
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("teamId", selectedTeamId);
+                jsonObject.put("workerId", workerid);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(getTasksByWorkerAndTeamURL)
+                        .post(body)
+                        .build();
+                Response responses = null;
+
+                try {
+                    responses = client.newCall(request).execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String jsonData = responses.body().string();
+                jsonData = "{\"tasks\":" + jsonData;
+                jsonData = jsonData + "}";
+                JSONObject Jobject = new JSONObject(jsonData);
+                //System.out.println(jsonData);
+                jsonTasks = Jobject.getJSONArray("tasks");
+
+                for (int i = 0; i < jsonTasks.length(); i++) {
+                    JSONObject object = jsonTasks.getJSONObject(i);
+                    tasks.add(object.getString("name"));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            ObservableList<String> langs = FXCollections.observableArrayList(tasks);
+            mainListView.setItems(langs);
+        }
     }
 
     public void btnCloseClicked(ActionEvent actionEvent) {
@@ -212,10 +350,12 @@ public class MainController {
             if (mainListView.getSelectionModel().getSelectedItem() != null) {
                 selectedTask = mainListView.getSelectionModel().getSelectedItem().toString();
                 lblSelectedTask.setText(mainListView.getSelectionModel().getSelectedItem().toString());
+                selectedTaskId = jsonTasks.getJSONObject(mainListView.getSelectionModel().getSelectedIndex()).getInt("id");
             }
         } else {
             if (mainListView.getSelectionModel().getSelectedItem() != null) {
                 getSelectedTeam = mainListView.getSelectionModel().getSelectedItem().toString();
+                selectedTeamId = jsonTeams.getJSONObject(mainListView.getSelectionModel().getSelectedIndex()).getInt("id");
             }
         }
     }

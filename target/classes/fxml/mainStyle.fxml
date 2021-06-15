@@ -60,7 +60,7 @@
                <Font size="25.0" />
             </font>
          </Button>
-         <ListView id="mainListView" fx:id="mainListView" layoutX="47.0" layoutY="-134.0" prefHeight="275.0" prefWidth="726.0" stylesheets="@../css/mainStyle.css" visible="false" />
+         <ListView id="mainListView" fx:id="mainListView" layoutX="47.0" layoutY="-102.0" prefHeight="243.0" prefWidth="726.0" stylesheets="@../css/mainStyle.css" visible="false" />
          <Button id="btnOk" fx:id="selectButton" layoutX="317.0" layoutY="149.0" mnemonicParsing="false" onAction="#selectButtonClicked" prefHeight="55.0" prefWidth="174.0" stylesheets="@../css/mainStyle.css" text="OK" textAlignment="CENTER" textFill="#0d0d0d" visible="false">
             <font>
                <Font name="Arial" size="29.0" />
