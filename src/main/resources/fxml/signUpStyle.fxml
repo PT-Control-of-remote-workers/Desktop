@@ -22,26 +22,25 @@
                <TextField id="loginTextField" fx:id="textFieldLogin" alignment="CENTER" prefHeight="35.0" stylesheets="@../css/mainStyle.css" />
             </VBox>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <PasswordField id="passwordField" fx:id="textFieldPassword" alignment="CENTER" prefHeight="35.0" stylesheets="@../css/mainStyle.css" />
-               </children>
+               <PasswordField id="passwordField" fx:id="textFieldPassword" alignment="CENTER" prefHeight="35.0"
+                              stylesheets="@../css/mainStyle.css"/>
             </VBox>
          </VBox>
       </HBox>
       <HBox alignment="CENTER" prefHeight="129.0" prefWidth="800.0">
-         <children>
-            <Button id="buttonLogIn" fx:id="buttonLogIn" mnemonicParsing="false" onAction="#buttonLogInClicked" prefHeight="81.0" prefWidth="202.0" stylesheets="@../css/mainStyle.css" text="Log In" textFill="#33ff00">
-               <font>
-                  <Font size="38.0" />
-               </font>
-            </Button>
-         </children>
+         <Button id="buttonLogIn" fx:id="buttonLogIn" mnemonicParsing="false" onAction="#buttonLogInClicked"
+                 prefHeight="81.0" prefWidth="202.0" stylesheets="@../css/mainStyle.css" text="Log In"
+                 textFill="#33ff00">
+            <font>
+               <Font size="38.0"/>
+            </font>
+         </Button>
       </HBox>
    </VBox>
    <AnchorPane prefHeight="50.0" prefWidth="820.0">
-      <children>
-         <Button id="btnClose" fx:id="btnClose" layoutX="779.0" layoutY="12.0" mnemonicParsing="false" onAction="#btnCloseClicked" prefWidth="26.0" stylesheets="@../css/mainStyle.css" />
-         <Button id="btnRollUp" fx:id="btnRollUp" layoutX="745.0" layoutY="12.0" mnemonicParsing="false" onAction="#btnRollUpClicked" prefWidth="26.0" stylesheets="@../css/mainStyle.css" />
-      </children>
+      <Button id="btnClose" fx:id="btnClose" layoutX="779.0" layoutY="12.0" mnemonicParsing="false"
+              onAction="#btnCloseClicked" prefWidth="26.0" stylesheets="@../css/mainStyle.css"/>
+      <Button id="btnRollUp" fx:id="btnRollUp" layoutX="745.0" layoutY="12.0" mnemonicParsing="false"
+              onAction="#btnRollUpClicked" prefWidth="26.0" stylesheets="@../css/mainStyle.css"/>
    </AnchorPane>
 </AnchorPane>

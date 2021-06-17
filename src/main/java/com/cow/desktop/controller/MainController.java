@@ -28,7 +28,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainController {
-    int workerid = 2;
+    public Label lblUserName;
+    String workerid = "";
     
     public Button btnComplete;
     public Button btnSelectTeam;
@@ -63,11 +64,13 @@ public class MainController {
     JSONArray jsonTeams = null;
     JSONArray jsonTasks = null;
 
-    private static String URL = "http://localhost:8080";
-    private static String getTeamsByWorkerURL = URL + "/team/getByWorker";
-    private static String getTasksByWorkerAndTeamURL = URL + "/task/getByWorkerAndTeam";
-    private static String taskCompleteURL = URL + "/task/complete";
-    private static String callURL = "http://localhost:9080/call";
+    private static final String URL = "http://localhost:8081";
+    private static final String getTeamsByWorkerURL = URL + "/api/v1/teams/workers";
+    private static final String getTasksByWorkerAndTeamURL = URL + "/api/v1/task/getByWorkerAndTeam";
+    private static final String taskCompleteURL = URL + "/api/v1/tasks";
+    private static final String callURL = "http://localhost:8080/api/v1/call";
+
+    String token = "";
     
 
 
@@ -111,6 +114,7 @@ public class MainController {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url(callURL)
+                    .addHeader("Authorization", "Bearer " + token)
                     .post(body)
                     .build();
             Response responses = null;
@@ -127,6 +131,7 @@ public class MainController {
 
     public void btnStartHandler(ActionEvent actionEvent) {
         if (selectedTaskId != -1) {
+            sendCall("WORKING");
             if (timeline == null) {
                 timeline = new Timeline(
                         new KeyFrame(
@@ -171,6 +176,7 @@ public class MainController {
             timeline = null;
             time[0] = 0;
             lblTimer.setText("00:00:00");
+            selectedTaskId = -1;
         }
     }
 
@@ -178,11 +184,6 @@ public class MainController {
         if (selectedTaskId != -1) {
 
             JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("id", selectedTaskId);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
 
             try {
                 MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -190,7 +191,8 @@ public class MainController {
 
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
-                        .url(taskCompleteURL)
+                        .url(taskCompleteURL + "/" + workerid + "/complete")
+                        .addHeader("Authorization", "Bearer " + token)
                         .put(body)
                         .build();
                 Response responses = null;
@@ -224,11 +226,6 @@ public class MainController {
         teams.clear();
 
         JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("id", workerid);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         try {
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -236,7 +233,8 @@ public class MainController {
 
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(getTeamsByWorkerURL)
+                    .url(getTeamsByWorkerURL + "/" + workerid)
+                    .addHeader("Authorization", "Bearer " + token)
                     .post(body)
                     .build();
             Response responses = null;
@@ -247,6 +245,7 @@ public class MainController {
                 e.printStackTrace();
             }
             String jsonData = responses.body().string();
+
             jsonData = "{\"teams\":" + jsonData;
             jsonData = jsonData + "}";
             JSONObject Jobject = new JSONObject(jsonData);
@@ -283,8 +282,8 @@ public class MainController {
 
             JSONObject jsonObject = new JSONObject();
             try {
-                jsonObject.put("teamId", selectedTeamId);
-                jsonObject.put("workerId", workerid);
+                jsonObject.put("id", selectedTeamId);
+                jsonObject.put("userId", workerid);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -296,6 +295,7 @@ public class MainController {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
                         .url(getTasksByWorkerAndTeamURL)
+                        .addHeader("Authorization", "Bearer " + token)
                         .post(body)
                         .build();
                 Response responses = null;
@@ -308,6 +308,7 @@ public class MainController {
                 String jsonData = responses.body().string();
                 jsonData = "{\"tasks\":" + jsonData;
                 jsonData = jsonData + "}";
+
                 JSONObject Jobject = new JSONObject(jsonData);
                 //System.out.println(jsonData);
                 jsonTasks = Jobject.getJSONArray("tasks");
@@ -371,4 +372,9 @@ public class MainController {
         mainMiddlePane.setVisible(true);
         settingsPane.setVisible(false);
     }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
 }

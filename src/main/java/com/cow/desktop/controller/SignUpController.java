@@ -12,6 +12,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import okhttp3.*;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,35 +31,76 @@ public class SignUpController implements Initializable {
     private double xOffset = 0;
     private double yOffset = 0;
 
+    private final String AUTH_URL = "http://localhost:9090/api/v1/auth/login";
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
     }
 
     public void buttonLogInClicked(ActionEvent actionEvent) throws IOException {
-        String trueLogin = "denis"; //заглушка
-        String truePass = "qwerty123"; //заглушка
         /*
         * производим авторизацию
         * */
-        //if(textFieldLogin.getText().equals(trueLogin) && textFieldPassword.getText().equals(truePass)) {
-            Stage mainStage = new Stage();
-            mainStage.setX(signUpStage.getX());
-            mainStage.setY(signUpStage.getY());
 
-            mainStage.initStyle(StageStyle.TRANSPARENT);
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/mainStyle.fxml"));
-            Parent root = loader.load();
-            mainStage.setTitle("COW");
-            Scene scene = new Scene(root, Color.TRANSPARENT);
-            mainStage.setScene(scene);
-            mainStage.show();
 
-            MainController controller = loader.getController();
-            controller.setPrimaryStage(mainStage);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("password", textFieldPassword.getText());
+            jsonObject.put("username", textFieldLogin.getText());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-            signUpStage.hide();
-        //}
+        try {
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(AUTH_URL)
+                    .post(body)
+                    .build();
+            Response responses = null;
+
+            try {
+                responses = client.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String jsonData = responses.body().string();
+
+            JSONObject Jobject = new JSONObject(jsonData);
+
+            if(Jobject.has("accessToken")) {
+                String token = Jobject.getString("accessToken");
+                Stage mainStage = new Stage();
+                mainStage.setX(signUpStage.getX());
+                mainStage.setY(signUpStage.getY());
+
+                mainStage.initStyle(StageStyle.TRANSPARENT);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/mainStyle.fxml"));
+                Parent root = loader.load();
+                mainStage.setTitle("COW");
+
+                Scene scene = new Scene(root, Color.TRANSPARENT);
+                mainStage.setScene(scene);
+                mainStage.show();
+
+                MainController controller = loader.getController();
+                controller.setToken(token);
+                controller.setPrimaryStage(mainStage);
+
+                controller.lblUserName.setText(textFieldLogin.getText());
+                controller.workerid = textFieldLogin.getText();
+
+                signUpStage.hide();
+            } else {
+                System.out.println("Not correct login or password");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void paneSignUpDragged(MouseEvent event) {
