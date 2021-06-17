@@ -70,6 +70,7 @@ public class MainController {
     private static final String getTasksByWorkerAndTeamURL = URL + "/api/v1/task/getByWorkerAndTeam";
     private static final String taskCompleteURL = URL + "/api/v1/tasks";
     private static final String callURL = "http://localhost:8080/api/v1/call";
+    private final String LOGOUT_URL = "http://localhost:9090/api/v1/auth/logout";
 
     String token = "";
     
@@ -383,6 +384,27 @@ public class MainController {
         signUpController.getSignUpStage().setY(mainStage.getY());
 
         signUpController.getSignUpStage().show();
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(LOGOUT_URL)
+                    .addHeader("Authorization", "Bearer " + token)
+                    .post(body)
+                    .build();
+
+            try {
+                client.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         mainStage.hide();
     }
