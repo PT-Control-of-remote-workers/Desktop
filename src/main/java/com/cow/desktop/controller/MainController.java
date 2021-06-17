@@ -30,6 +30,7 @@ import java.util.ArrayList;
 public class MainController {
     public Label lblUserName;
     String workerid = "";
+    SignUpController signUpController;
     
     public Button btnComplete;
     public Button btnSelectTeam;
@@ -377,4 +378,20 @@ public class MainController {
         this.token = token;
     }
 
+    public void btnLogoutClicked(ActionEvent actionEvent) throws IOException {
+        signUpController.getSignUpStage().setX(mainStage.getX());
+        signUpController.getSignUpStage().setY(mainStage.getY());
+
+        signUpController.getSignUpStage().show();
+
+        mainStage.hide();
+    }
+
+    public SignUpController getSignUpController() {
+        return signUpController;
+    }
+
+    public void setSignUpController(SignUpController signUpController) {
+        this.signUpController = signUpController;
+    }
 }

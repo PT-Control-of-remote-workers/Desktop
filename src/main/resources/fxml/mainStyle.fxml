@@ -11,19 +11,21 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane id="paneMain" onMouseDragged="#paneSignUpDragged" onMousePressed="#paneSignUpPressed" prefHeight="517.0" prefWidth="820.0" stylesheets="@../css/mainStyle.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cow.desktop.controller.MainController">
-   <AnchorPane id="settingsPane" fx:id="settingsPane" layoutX="29.0" layoutY="180.0" prefHeight="311.0"
-               prefWidth="765.0" stylesheets="@../css/mainStyle.css" visible="false">
-      <CheckBox layoutX="50.0" layoutY="44.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="24.0"/>
+   <AnchorPane id="settingsPane" fx:id="settingsPane" layoutX="29.0" layoutY="180.0" prefHeight="311.0" prefWidth="765.0" stylesheets="@../css/mainStyle.css" visible="false">
+      <CheckBox layoutX="50.0" layoutY="44.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="24.0" />
       <Label layoutX="99.0" layoutY="30.0" prefHeight="50.0" prefWidth="398.0" text="Access webcam" textFill="WHITE">
          <font>
-            <Font size="37.0"/>
+            <Font size="37.0" />
          </font>
       </Label>
-      <Button id="btnSelectTeam" fx:id="btnSaveSettings" layoutX="317.0" layoutY="245.0" mnemonicParsing="false"
-              onAction="#btnSaveSettingsClicked" prefHeight="35.0" prefWidth="130.0" stylesheets="@../css/mainStyle.css"
-              text="Save" textFill="WHITE">
+      <Button id="btnStop" layoutX="155.0" layoutY="245.0" mnemonicParsing="false" onAction="#btnLogoutClicked" stylesheets="@../css/mainStyle.css" text="Logout" textFill="RED">
          <font>
-            <Font size="23.0"/>
+            <Font size="26.0" />
+         </font>
+      </Button>
+      <Button id="btnSelectTeam" fx:id="btnSaveSettings" layoutX="470.0" layoutY="245.0" mnemonicParsing="false" onAction="#btnSaveSettingsClicked" prefHeight="35.0" prefWidth="130.0" stylesheets="@../css/mainStyle.css" text="Save" textFill="WHITE">
+         <font>
+            <Font size="23.0" />
          </font>
       </Button>
    </AnchorPane>

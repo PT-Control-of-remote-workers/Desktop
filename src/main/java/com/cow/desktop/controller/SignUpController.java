@@ -32,6 +32,7 @@ public class SignUpController implements Initializable {
     private double yOffset = 0;
 
     private final String AUTH_URL = "http://localhost:9090/api/v1/auth/login";
+    private final String REFRESH_TOKEN_URL = "http://localhost:9090/api/v1/auth/refresh-token";
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -72,8 +73,8 @@ public class SignUpController implements Initializable {
 
             JSONObject Jobject = new JSONObject(jsonData);
 
-            if(Jobject.has("accessToken")) {
-                String token = Jobject.getString("accessToken");
+            if(responses.isSuccessful()) {
+                final String[] token = {Jobject.getString("accessToken")};
                 Stage mainStage = new Stage();
                 mainStage.setX(signUpStage.getX());
                 mainStage.setY(signUpStage.getY());
@@ -88,11 +89,55 @@ public class SignUpController implements Initializable {
                 mainStage.show();
 
                 MainController controller = loader.getController();
-                controller.setToken(token);
+                controller.setToken(token[0]);
                 controller.setPrimaryStage(mainStage);
+
+                Runnable task = new Runnable() {
+                    public void run() {
+                        while(true) {
+                            JSONObject jsonObject = new JSONObject();
+                            try {
+                                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                                RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+
+                                OkHttpClient client = new OkHttpClient();
+                                Request request = new Request.Builder()
+                                        .url(REFRESH_TOKEN_URL)
+                                        .addHeader("Cookie", "REFRESH_TOKEN=" + token[0])
+                                        .get()
+                                        .build();
+                                Response responses = null;
+
+                                try {
+                                    responses = client.newCall(request).execute();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                if (responses != null && responses.isSuccessful()) {
+                                    String jsonData = responses.body().string();
+                                    JSONObject Jobject = new JSONObject(jsonData);
+
+                                    token[0] = Jobject.getString("accessToken");
+                                    controller.setToken(token[0]);
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                Thread.sleep(3600000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                };
+                Thread thread = new Thread(task);
+                thread.start();
 
                 controller.lblUserName.setText(textFieldLogin.getText());
                 controller.workerid = textFieldLogin.getText();
+                controller.setSignUpController(this);
 
                 signUpStage.hide();
             } else {
@@ -133,5 +178,9 @@ public class SignUpController implements Initializable {
     public void btnRollUpClicked(ActionEvent actionEvent) {
         Stage stage = (Stage) btnRollUp.getScene().getWindow();
         stage.setIconified(true);
+    }
+
+    public Stage getSignUpStage() {
+        return signUpStage;
     }
 }
